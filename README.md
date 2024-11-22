@@ -238,7 +238,6 @@ INSTALLED_APPS += [
 ./manage.py makemigrations
 ./manage.py migrate
 ```
-
 ## security
 
 - Clear and essential information to understand. Security of web pages and data is a frequent topic of discussion and a common question in interviews. It's also one of the key requirements for clients and users.
@@ -341,12 +340,11 @@ uvicorn bsae.wsgi:application
 pip install gunicorn uvicorn
 gunicorn base.asgi:application -k uvicorn.workers.UvicornWorker
 ```
-
+###
 [Deployment checklist | Django documentation | Django](https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/). review settings, with security, performance, and operations in mind.
 ```shell
 ./manage.py check --deploy
 ```
-
 ## extensions, tools and other
 
 - A useful tool for debugging Django applications. While I found it helpful at times, I’ve only used it a couple of times in practice.
