@@ -436,6 +436,45 @@ services:
     depends_on:
       - django-app
 ```
+### (optional)
+-
+use follow to disable `default` configuration to use several configurations:
+`./docker-compose.yml`:
+```yml
+  nginx:
+	# ...
+    volumes:
+      - /dev/nul:/etc/nginx/conf.d/default.conf:ro
+      - ./conf1.conf:/etc/nginx/conf.d/conf1.conf:ro
+      - ./conf2.conf:/etc/nginx/conf.d/conf2.conf:ro
+    # ...
+```
+-
+use follow to change all nginx configurations:
+`./docker-compose.yml`:
+```yml
+  nginx:
+	# ...
+    volumes:
+      - /nginx.conf:/etc/nginx/nginx.conf:ro
+    # ...
+```
+use follow to get sample:
+```shell
+docker run --rm --entrypoint=cat nginx /etc/nginx/nginx.conf > ./sample.nginx.conf
+```
+-
+collected static files can be add to docker image:
+```Dockerfile
+# ...
+# COPY . .
+
+RUN python manage.py collectstatic --no-input
+
+# ...
+```
+-
+it is recommendation to use volumes for `static` and `media` in production deployment.
 ## deploy
 
 [How to deploy Django | Django documentation | Django](https://docs.djangoproject.com/en/4.2/howto/deployment/).

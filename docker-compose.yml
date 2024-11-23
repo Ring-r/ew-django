@@ -12,8 +12,6 @@ services:
     image: nginx:latest
     container_name: nginx
     volumes:
-      # - ./index.html:/usr/share/nginx/html/index.html:ro  # TODO: replace by own welcome page
-      # - ./nginx.conf:/etc/nginx/nginx.conf:ro  # `$ docker run --rm --entrypoint=cat nginx /etc/nginx/nginx.conf > ./sample.nginx.conf`
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - ./static:/usr/share/nginx/html/static:ro
     ports:
