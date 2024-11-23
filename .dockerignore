@@ -1,0 +1,47 @@
+# Exclude Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Exclude local environment files
+*.env
+*.env.*
+
+# Exclude virtual environments
+.venv/
+venv/
+env/
+*.egg-info/
+
+# Exclude static and media files (collected or uploaded outside the container)
+static/
+media/
+
+# Exclude logs and temporary files
+*.log
+*.bak
+*.swp
+*.tmp
+*.pid
+
+# Exclude Docker-related files
+Dockerfile
+docker-compose.yml
+
+# Exclude Git and version control files
+.git/
+.gitignore
+
+# Exclude IDE and editor config files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Exclude build artifacts
+build/
+dist/
+*.egg
+*.tar.gz
+*.zip

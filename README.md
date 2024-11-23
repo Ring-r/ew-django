@@ -310,6 +310,132 @@ urlpatterns = [
 ]
 
 ```
+## docker layer
+-
+add to `./src/base/settings.py`:
+```python
+# ...
+
+# Deploy layer
+
+STATIC_ROOT = BASE_DIR / 'static'
+
+```
+-
+```sh
+./manage.py collectstatic
+```
+-
+`./Dockerfile`:
+```Dockerfile
+FROM python:3.10-slim
+
+WORKDIR /app
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+EXPOSE 8000
+
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "base.wsgi:application"]
+```
+-
+`./.dockerignore`:
+```.dockerignore
+# Exclude Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Exclude local environment files
+*.env
+*.env.*
+
+# Exclude virtual environments
+.venv/
+venv/
+env/
+*.egg-info/
+
+# Exclude static and media files (collected or uploaded outside the container)
+static/
+media/
+
+# Exclude logs and temporary files
+*.log
+*.bak
+*.swp
+*.tmp
+*.pid
+
+# Exclude Docker-related files
+Dockerfile
+docker-compose.yml
+
+# Exclude Git and version control files
+.git/
+.gitignore
+
+# Exclude IDE and editor config files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Exclude build artifacts
+build/
+dist/
+*.egg
+*.tar.gz
+*.zip
+
+```
+-
+`./nginx.conf`:
+```conf
+server {
+    listen 80;
+
+    location / {
+        proxy_pass http://django-app:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /static/ {
+        alias /usr/share/nginx/html/static/;
+    }
+}
+```
+-
+`./docker-compose.yml`:
+```yml
+version: '3.8'
+
+services:
+  django-app:
+    build:
+      context: .
+    container_name: django-app
+    volumes:
+      - ./db.sqlite3:/app/db.sqlite3
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./static:/usr/share/nginx/html/static:ro
+    ports:
+      - "80:80"
+    depends_on:
+      - django-app
+```
 ## deploy
 
 [How to deploy Django | Django documentation | Django](https://docs.djangoproject.com/en/4.2/howto/deployment/).

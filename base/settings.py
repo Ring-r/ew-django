@@ -146,3 +146,7 @@ SPECTACULAR_SETTINGS = {
 INSTALLED_APPS += [
     'some_app',
 ]
+
+# Deploy layer
+
+STATIC_ROOT = BASE_DIR / 'static'
